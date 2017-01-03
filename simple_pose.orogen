@@ -1,0 +1,24 @@
+name "simple_pose"
+version "0.1"
+
+
+import_types_from "simple_poseTypes.hpp"
+import_types_from "base"
+ 
+task_context "Task" do
+    needs_configuration
+  
+    # Input ports
+    input_port("imu_pose", "base/samples/RigidBodyState").
+            doc "IMU pose samples."
+
+    input_port("gps_pose", "base/samples/RigidBodyState").
+            doc "GPS pose samples."
+
+    # Output ports
+    output_port("pose", "base/samples/RigidBodyState").
+    doc "Pose samples merged (IMU heading + GPS position)."
+
+    port_driven "gps_pose"
+end
+
