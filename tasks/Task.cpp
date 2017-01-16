@@ -42,8 +42,20 @@ void Task::updateHook()
         gps_pose = pose;
     }
 
-    resulting_pose.orientation  = imu_pose.orientation;
-    resulting_pose.position     = gps_pose.position;
+    // GPS Position    
+    resulting_pose.position = gps_pose.position;
+
+
+    double roll, pitch, yaw;
+    // GPS yaw, IMU roll, pitch
+    yaw     = gps_pose.getYaw();
+    roll    = imu_pose.getRoll();
+    pitch   = imu_pose.getPitch();
+
+    resulting_pose.orientation = Eigen::Quaterniond( 
+            Eigen::AngleAxisd(yaw,   Eigen::Vector3d::UnitZ()) *
+            Eigen::AngleAxisd(pitch, Eigen::Vector3d::UnitY()) *
+            Eigen::AngleAxisd(roll,  Eigen::Vector3d::UnitX()));    
 
     _pose.write(resulting_pose);
 }
